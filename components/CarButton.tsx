@@ -5,11 +5,15 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 interface Props {
   icon: string;
   text: string;
+  onPressHandler: () => void;
 }
 
-const CarButton = ({ icon, text }: Props) => {
+const CarButton = ({ icon, text, onPressHandler }: Props) => {
   return (
-    <TouchableOpacity style={[styles.container, globalStyles.shadow]}>
+    <TouchableOpacity
+      style={[styles.container, globalStyles.shadow]}
+      onPress={onPressHandler}
+    >
       <FontAwesome5 name={icon} size={25} color="white" />
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
