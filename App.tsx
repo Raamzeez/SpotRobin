@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { Marker, Region } from "react-native-maps";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import CarButton from "./components/CarButton";
 import * as Location from "expo-location";
 import dummySpots from "./dummy";
@@ -8,6 +8,7 @@ import Spot from "./models/Spot";
 import SearchingIndicator from "./components/SearchingIndicator";
 import ToastManager, { Toast } from "toastify-react-native";
 import SpotCard from "./components/SpotCard";
+import Carousel from "react-native-reanimated-carousel";
 
 const App = () => {
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
@@ -111,8 +112,16 @@ const App = () => {
           <MapView style={styles.map} />
         </>
       )}
-      <View style={styles.controlsContainer}>
-        {/* <Text>{text}</Text> */}
+      <View
+        style={{
+          flex: 1,
+          position: "absolute",
+          bottom: "0%",
+          width: "100%",
+          height: Dimensions.get("screen").height / 4,
+          // backgroundColor: "azure",
+        }}
+      >
         {!selectedSpot ? (
           <View
             style={{
@@ -142,7 +151,18 @@ const App = () => {
               alignItems: "center",
             }}
           >
-            <SpotCard spot={selectedSpot} />
+            {spots && (
+              <Carousel
+                loop
+                width={400}
+                data={spots}
+                scrollAnimationDuration={500}
+                onSnapToItem={(index) => handleSpotPress(spots[index])}
+                renderItem={({ item, index }) => (
+                  <SpotCard spot={item} key={index} />
+                )}
+              />
+            )}
           </View>
         )}
       </View>
@@ -158,12 +178,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   controlsContainer: {
-    flex: 0.25,
+    flex: 1,
     width: "100%",
+    backgroundColor: "blue",
   },
   map: {
     width: "100%",
-    flex: 0.75,
+    flex: 1,
   },
 });
 
