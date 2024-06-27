@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Spot from "../models/Spot";
 import globalStyles from "../globalStyles";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
@@ -42,7 +42,7 @@ const SpotCard = ({ spot }: Props) => {
             name={"car"}
             size={16}
             style={{ paddingRight: 7 }}
-            color="black"
+            color="#425af5"
           />
           <Text style={{ color: "black" }}>Left {spot.elapsed}</Text>
         </View>
@@ -51,11 +51,16 @@ const SpotCard = ({ spot }: Props) => {
             name={"map-pin"}
             size={16}
             style={{ paddingRight: 7 }}
-            color="black"
+            color="red"
           />
           <Text style={{ color: "black" }}>
             {spot.coordinate.latitude}, {spot.coordinate.longitude}
           </Text>
+        </View>
+        <View>
+          <TouchableOpacity style={[styles.goButton, globalStyles.shadow]}>
+            <Text style={styles.goText}>Go</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -72,6 +77,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     flexDirection: "row",
+  },
+  goButton: {
+    height: 30,
+    width: 50,
+    backgroundColor: "#21bf58",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  goText: {
+    fontWeight: "bold",
+    color: "white",
   },
 });
 

@@ -5,7 +5,7 @@ import CarButton from "./components/CarButton";
 import * as Location from "expo-location";
 import dummySpots from "./dummy";
 import Spot from "./models/Spot";
-import SearchingIndicator from "./components/SearchingIndicator";
+import Indicator from "./components/Indicator";
 import ToastManager, { Toast } from "toastify-react-native";
 import SpotCard from "./components/SpotCard";
 import Carousel from "react-native-reanimated-carousel";
@@ -81,7 +81,7 @@ const App = () => {
   return (
     <View style={styles.container}>
       <ToastManager />
-      {looking && <SearchingIndicator />}
+      {looking && <Indicator />}
       {mapRegion ? (
         <>
           <MapView
@@ -100,7 +100,7 @@ const App = () => {
                   key={spot.id}
                   coordinate={spot.coordinate}
                   title={spot.elapsed}
-                  description="Test"
+                  description={spot.name}
                   onPress={() => handleSpotPress(spot)}
                 />
               );
