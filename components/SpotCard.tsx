@@ -5,9 +5,10 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 interface Props {
   spot: Spot;
+  onGoHandler: () => void;
 }
 
-const SpotCard = ({ spot }: Props) => {
+const SpotCard = ({ spot, onGoHandler }: Props) => {
   return (
     <View style={[styles.container, globalStyles.shadow]}>
       <View style={{ flex: spot.image ? 0.5 : 0, height: "100%" }}>
@@ -58,7 +59,10 @@ const SpotCard = ({ spot }: Props) => {
           </Text>
         </View>
         <View>
-          <TouchableOpacity style={[styles.goButton, globalStyles.shadow]}>
+          <TouchableOpacity
+            style={[styles.goButton, globalStyles.shadow]}
+            onPress={onGoHandler}
+          >
             <Text style={styles.goText}>Go</Text>
           </TouchableOpacity>
         </View>

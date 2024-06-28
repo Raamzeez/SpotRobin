@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import MapView, { Marker, Region } from "react-native-maps";
+import MapView, { LatLng, Marker, Region } from "react-native-maps";
 import { Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import CarButton from "./components/CarButton";
 import * as Location from "expo-location";
@@ -9,14 +9,19 @@ import Indicator from "./components/Indicator";
 import ToastManager, { Toast } from "toastify-react-native";
 import SpotCard from "./components/SpotCard";
 import Carousel from "react-native-reanimated-carousel";
+import MapViewDirections from "react-native-maps-directions";
+import Constants from "expo-constants";
 
 const App = () => {
+  const [currentLocation, setCurrentLocation] = useState<LatLng | null>(null);
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
   const [spots, setSpots] = useState<Spot[] | null>(dummySpots);
   const [mapRegion, setMapRegion] = useState<Region | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [parking, setParking] = useState<boolean>(false);
   const [looking, setLooking] = useState<boolean>(false);
+  const [destination, setDestination] = useState<LatLng | null>(null);
+  const [initialRegionSet, setInitialRegionSet] = useState(false);
 
   const mapViewRef = useRef<MapView>(null); // Added mapViewRef
 
@@ -28,16 +33,37 @@ const App = () => {
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
-      const { longitude, latitude } = location.coords;
-      setMapRegion({
-        longitude,
-        latitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      });
+      let locationSubscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 10000, // Update every 10 seconds
+          distanceInterval: 10, // Update every 10 meters
+        },
+        (location) => {
+          const { longitude, latitude } = location.coords;
+          setCurrentLocation({
+            longitude,
+            latitude,
+          });
+
+          if (!initialRegionSet) {
+            setMapRegion({
+              longitude,
+              latitude,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
+            });
+            setInitialRegionSet(true);
+          }
+        }
+      );
+
+      // Clean up the subscription on unmount
+      return () => {
+        locationSubscription.remove();
+      };
     })();
-  }, []);
+  }, [initialRegionSet]);
 
   let text = "Waiting..";
   if (errorMsg) {
@@ -78,6 +104,10 @@ const App = () => {
     }
   };
 
+  const onGoHandler = () => {
+    selectedSpot && setDestination(selectedSpot?.coordinate);
+  };
+
   return (
     <View style={styles.container}>
       <ToastManager />
@@ -87,13 +117,26 @@ const App = () => {
           <MapView
             ref={mapViewRef}
             style={styles.map}
-            region={mapRegion}
+            initialRegion={mapRegion}
             showsUserLocation={true}
             zoomControlEnabled={true}
             showsMyLocationButton={true}
             mapType="hybrid"
             onPress={handleMapPress}
           >
+            {currentLocation && selectedSpot && destination && (
+              <MapViewDirections
+                origin={{
+                  latitude: currentLocation.latitude,
+                  longitude: currentLocation.longitude,
+                }}
+                destination={selectedSpot?.coordinate}
+                apikey={process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY as string}
+                strokeWidth={6}
+                strokeColor="blue"
+              />
+            )}
+
             {dummySpots.map((spot) => {
               return (
                 <Marker
@@ -159,7 +202,7 @@ const App = () => {
                 scrollAnimationDuration={500}
                 onSnapToItem={(index) => handleSpotPress(spots[index])}
                 renderItem={({ item, index }) => (
-                  <SpotCard spot={item} key={index} />
+                  <SpotCard spot={item} key={index} onGoHandler={onGoHandler} />
                 )}
               />
             )}
