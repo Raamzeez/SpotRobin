@@ -12,6 +12,7 @@ import Carousel from "react-native-reanimated-carousel";
 import MapViewDirections from "react-native-maps-directions";
 import Constants from "expo-constants";
 import { Linking } from "react-native";
+import getPlaceInfo from "./services/getPlaceInfo";
 
 const App = () => {
   const [currentLocation, setCurrentLocation] = useState<LatLng | null>(null);
@@ -93,6 +94,7 @@ const App = () => {
   const handleSpotPress = (spot: Spot) => {
     if (mapViewRef.current) {
       setSelectedSpot(spot);
+      const details = getPlaceInfo(spot.coordinate);
       const { coordinate } = spot;
       mapViewRef.current.animateToRegion(
         {
