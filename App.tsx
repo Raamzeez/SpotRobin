@@ -11,6 +11,7 @@ import SpotCard from "./components/SpotCard";
 import Carousel from "react-native-reanimated-carousel";
 import MapViewDirections from "react-native-maps-directions";
 import Constants from "expo-constants";
+import { Linking } from "react-native";
 
 const App = () => {
   const [currentLocation, setCurrentLocation] = useState<LatLng | null>(null);
@@ -106,6 +107,10 @@ const App = () => {
 
   const onGoHandler = () => {
     selectedSpot && setDestination(selectedSpot?.coordinate);
+    const url = `maps://?q=${selectedSpot?.coordinate.latitude},${selectedSpot?.coordinate.longitude}`;
+    Linking.openURL(url).catch((err) =>
+      console.error("Error opening Apple Maps:", err)
+    );
   };
 
   return (
