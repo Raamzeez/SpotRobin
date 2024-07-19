@@ -13,6 +13,7 @@ import MapViewDirections from "react-native-maps-directions";
 import Constants from "expo-constants";
 import { Linking } from "react-native";
 import getPlaceInfo from "./services/getPlaceInfo";
+import leavingSpot from "./services/leavingSpot";
 
 const App = () => {
   const [currentLocation, setCurrentLocation] = useState<LatLng | null>(null);
@@ -89,6 +90,7 @@ const App = () => {
       Toast.success("Have a good day!", "top");
     }
     setParking(!parking);
+    leavingSpot(selectedSpot as Spot);
   };
 
   const handleSpotPress = (spot: Spot) => {
