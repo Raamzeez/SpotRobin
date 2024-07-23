@@ -90,7 +90,7 @@ const App = () => {
       Toast.success("Have a good day!", "top");
     }
     setParking(!parking);
-    leavingSpot(selectedSpot as Spot);
+    selectedSpot && leavingSpot(selectedSpot as Spot);
   };
 
   const handleSpotPress = (spot: Spot) => {
@@ -232,7 +232,18 @@ const styles = StyleSheet.create({
   controlsContainer: {
     flex: 1,
     width: "100%",
-    backgroundColor: "blue",
+    backgroundColor: "#4CAF50", // Changed to a green color
+    padding: 20, // Added padding for better spacing
+    borderRadius: 10, // Added border radius for rounded corners
+    shadowColor: "#000", // Added shadow for a subtle 3D effect
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 3, // Added elevation for Android shadow
+    borderWidth: 2, // Added border for more emphasis
+    borderColor: "#ffffff", // Border color set to white
+    justifyContent: "center", // Centered content vertically
+    alignItems: "center", // Centered content horizontally
   },
   map: {
     width: "100%",
