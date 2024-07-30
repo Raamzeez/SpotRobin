@@ -115,6 +115,7 @@ const App = () => {
     Linking.openURL(url).catch((err) =>
       console.error("Error opening Apple Maps:", err)
     );
+    setSelectedSpot(null);
   };
 
   return (

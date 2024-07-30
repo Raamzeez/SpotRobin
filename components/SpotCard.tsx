@@ -63,7 +63,7 @@ const SpotCard = ({ spot, onGoHandler }: Props) => {
             style={[styles.goButton, globalStyles.shadow]}
             onPress={onGoHandler}
           >
-            <Text style={styles.goText}>Go</Text>
+            <Text style={styles.goText}>Navigate</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -83,12 +83,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   goButton: {
-    height: 30,
-    width: 50,
     backgroundColor: "#21bf58",
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
+    padding: 10,
   },
   goText: {
     fontWeight: "bold",
