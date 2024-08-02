@@ -14,6 +14,8 @@ import Constants from "expo-constants";
 import { Linking } from "react-native";
 import getPlaceInfo from "./services/getPlaceInfo";
 import leavingSpot from "./services/leavingSpot";
+import addSpot from "./services/addSpot";
+import { v4 as uuidv4 } from "uuid";
 
 const App = () => {
   const [currentLocation, setCurrentLocation] = useState<LatLng | null>(null);
@@ -91,6 +93,16 @@ const App = () => {
     }
     setParking(!parking);
     selectedSpot && leavingSpot(selectedSpot as Spot);
+    if (selectedSpot) {
+      addSpot(selectedSpot as Spot);
+    } else {
+      addSpot({
+        id: uuidv4(),
+        elapsed: 0,
+        coordinate: { longitude, latitude },
+        name: "Test",
+      } as Spot);
+    }
   };
 
   const handleSpotPress = (spot: Spot) => {
